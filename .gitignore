@@ -23,3 +23,6 @@ doc/
 # Gradle stuff we dont use yet
 gradle/wrapper
 
+
+#ignore changes to the apps properties file
+jdm.properties
