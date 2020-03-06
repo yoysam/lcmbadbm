@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Utility methods for jDiskMark
+ * @author yosef
  */
 public class Util {
 

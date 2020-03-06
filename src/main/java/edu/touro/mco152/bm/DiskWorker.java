@@ -35,6 +35,7 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  * To be Swing compliant this class extends SwingWorker and declares that its final return (when
  * doInBackground() is finished) is of type Boolean, and declares that intermediate results are communicated to
  * Swing using an instance of the DiskMark class.
+ * terrible class
  */
 
 public class DiskWorker extends SwingWorker<Boolean, DiskMark> {

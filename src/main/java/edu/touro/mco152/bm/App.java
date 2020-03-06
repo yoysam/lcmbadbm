@@ -1,3 +1,6 @@
+/**
+ * main package
+ */
 package edu.touro.mco152.bm;
 
 import edu.touro.mco152.bm.persist.DiskRun;
@@ -16,6 +19,7 @@ import java.util.logging.Logger;
 
 /**
  * Primary class for global variables.
+ * volilates srp
  */
 public class App {
 
@@ -123,6 +127,9 @@ public class App {
         });
     }
 
+    /**
+     * load the configeration file
+     */
     public static void loadConfig() {
         File pFile = new File(PROPERTIESFILE);
         if (!pFile.exists()) {
@@ -161,6 +168,9 @@ public class App {
         writeSyncEnable = Boolean.valueOf(value);
     }
 
+    /**
+     * saves the cofing file
+     */
     public static void saveConfig() {
         p.setProperty("locationDir", App.locationDir.getAbsolutePath());
         p.setProperty("multiFile", String.valueOf(multiFile));
