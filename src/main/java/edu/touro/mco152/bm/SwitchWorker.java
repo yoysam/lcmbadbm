@@ -37,8 +37,8 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  * Swing using an instance of the DiskMark class.
  */
 
-public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
-
+public class DiskWorker //extends SwingWorker<Boolean, DiskMark> {
+{
     @Override
     protected Boolean doInBackground() throws Exception {
 
