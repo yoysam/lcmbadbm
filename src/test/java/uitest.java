@@ -5,7 +5,7 @@ import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import edu.touro.mco152.bm.ui.uiworker;
 import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.extension.ExtendWith;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import java.util.Properties;
 /**
  * the jnuit implmataion
  */
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class uitest implements uiworker {
     /**
@@ -34,33 +35,37 @@ public class uitest implements uiworker {
     @Override
     public boolean wascan() {
         System.out.println("it was cancelled");
-        return true;
+        return false;
     }
 
     /**
      * A method to check if the progress is being messured
      * @param progress
      */
-    @Test
+
+
     @Override
     public void updateprog(int progress) {
-        Assertions.assertEquals(progress >=0 && progress<=100,true);
+        try {
+            Assertions.assertEquals(progress >= 0 && progress <= 100, true);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 
     private final static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final static PrintStream originalOut = System.out;
-    @BeforeAll
+    @Test
     void setup() throws Exception {
-        setupDefaultAsPerProperties();
        SwitchWorker switchWorker= new SwitchWorker(this);
        switchWorker.dostuff();
     }
 
-
+    @BeforeAll
      void setupDefaultAsPerProperties()
     {
-        System.setOut(new PrintStream(outContent));
+
         /// Do the minimum of what  App.init() would do to allow to run.
         Gui.mainFrame = new MainFrame();
         App.p = new Properties();
@@ -88,7 +93,7 @@ public class uitest implements uiworker {
             App.dataDir.mkdirs(); // create data dir if not already present
         }
 
-
+        System.setOut(new PrintStream(outContent));
     }
     @BeforeEach
     public  void resetstream() throws IOException {
