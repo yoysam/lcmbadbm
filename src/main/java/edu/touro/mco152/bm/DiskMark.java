@@ -48,7 +48,7 @@ public class DiskMark {
     }
 
     public double getBwMbSec() {
-        return bwMbSec-1;
+        return bwMbSec;
     }
 
     public void setBwMbSec(double bwMbSec) {
