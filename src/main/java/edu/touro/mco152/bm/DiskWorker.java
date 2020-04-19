@@ -3,8 +3,6 @@ package edu.touro.mco152.bm;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.persist.EM;
 import edu.touro.mco152.bm.ui.Gui;
-import edu.touro.mco152.bm.ui.swingworker;
-import edu.touro.mco152.bm.ui.uiworker;
 
 import javax.persistence.EntityManager;
 import javax.swing.*;
@@ -37,18 +35,12 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
  * To be Swing compliant this class extends SwingWorker and declares that its final return (when
  * doInBackground() is finished) is of type Boolean, and declares that intermediate results are communicated to
  * Swing using an instance of the DiskMark class.
- * now sues a uiworker instead
  */
 
-public class SwitchWorker
-{
-    uiworker uiworker;
-    public SwitchWorker(uiworker uiworker){
-        this.uiworker=uiworker;
-    }
+public class DiskWorker extends SwingWorker<Boolean, DiskMark> {
 
-
-    public Boolean dostuff() throws Exception {
+    @Override
+    protected Boolean doInBackground() throws Exception {
 
         /**
          * We 'got here' because: a) End-user clicked 'Start' on the benchmark UI,
@@ -117,7 +109,7 @@ public class SwitchWorker
              * that keeps writing data (in its own loop - for specified # of blocks). Each 'Mark' is timed
              * and is reported to the GUI for display as each Mark completes.
              */
-            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !uiworker.wascan(); m++) {
+            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !isCancelled(); m++) {
 
                 if (App.multiFile) {
                     testFile = new File(dataDir.getAbsolutePath()
@@ -151,8 +143,7 @@ public class SwitchWorker
                             /**
                              * Report to GUI what percentage level of Entire BM (#Marks * #Blocks) is done.
                              */
-
-                            uiworker.updateprog((int) percentComplete);
+                            setProgress((int) percentComplete);
                         }
                     }
                 } catch (IOException ex) {
@@ -175,7 +166,7 @@ public class SwitchWorker
                 /**
                  * Let the GUI know the interim result described by the current Mark
                  */
-                uiworker.pusdopublish(wMark);
+                publish(wMark);
 
                 // Keep track of statistics to be displayed and persisted after all Marks are done.
                 run.setRunMax(wMark.getCumMax());
@@ -202,7 +193,7 @@ public class SwitchWorker
          */
 
         // try renaming all files to clear catch
-        if (App.readTest && App.writeTest && !uiworker.wascan()) {
+        if (App.readTest && App.writeTest && !isCancelled()) {
             JOptionPane.showMessageDialog(Gui.mainFrame,
                     "For valid READ measurements please clear the disk cache by\n" +
                             "using the included RAMMap.exe or flushmem.exe utilities.\n" +
@@ -226,7 +217,7 @@ public class SwitchWorker
             Gui.chartPanel.getChart().getTitle().setVisible(true);
             Gui.chartPanel.getChart().getTitle().setText(run.getDiskInfo());
 
-            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !uiworker.wascan(); m++) {
+            for (int m = startFileNum; m < startFileNum + App.numOfMarks && !isCancelled(); m++) {
 
                 if (App.multiFile) {
                     testFile = new File(dataDir.getAbsolutePath()
@@ -251,7 +242,7 @@ public class SwitchWorker
                             rUnitsComplete++;
                             unitsComplete = rUnitsComplete + wUnitsComplete;
                             percentComplete = (float) unitsComplete / (float) unitsTotal * 100f;
-                            uiworker.updateprog((int) percentComplete);
+                            setProgress((int) percentComplete);
                         }
                     }
                 } catch (FileNotFoundException ex) {
@@ -265,7 +256,7 @@ public class SwitchWorker
                 msg("m:" + m + " READ IO is " + rMark.getBwMbSec() + " MB/s    "
                         + "(MBread " + mbRead + " in " + sec + " sec)");
                 App.updateMetrics(rMark);
-                uiworker.pusdopublish(rMark);
+                publish(rMark);
 
                 run.setRunMax(rMark.getCumMax());
                 run.setRunMin(rMark.getCumMin());
@@ -284,8 +275,8 @@ public class SwitchWorker
         return true;
     }
 
-
-    public void process(List<DiskMark> markList) {
+    @Override
+    protected void process(List<DiskMark> markList) {
         /**
          * We are passed a list of one or more DiskMark objects that our thread has previously
          * published to Swing. Watch Professor Cohen's video - Module_6_RefactorBadBM Swing_DiskWorker_Tutorial.mp4
@@ -299,14 +290,12 @@ public class SwitchWorker
         });
     }
 
-
-    public void done() {
+    @Override
+    protected void done() {
         if (App.autoRemoveData) {
             Util.deleteDirectory(dataDir);
         }
         App.state = App.State.IDLE_STATE;
         Gui.mainFrame.adjustSensitivity();
     }
-
-
 }

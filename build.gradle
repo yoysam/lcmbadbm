@@ -11,12 +11,10 @@ repositories {
     jcenter()
 }
 dependencies {
-
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.0-jre'
     // Use JUnit test framework
-    //testImplementation 'junit:junit:4.12'
-    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+    testImplementation 'junit:junit:4.12'
     // Charting api/runtime
     api  group: 'org.jfree', name: 'jfreechart', version: '1.0.17'
     // database/persistence
@@ -33,15 +31,5 @@ application {
 jar {
     manifest {
         attributes 'Main-Class': 'mco152.bm.App'
-    }
-}
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
-    sourceSets  {
-        // MJC this is need to make entity classes visible to the persistence scanner
-        sourceSets.main.output.resourcesDir = sourceSets.main.java.outputDir
     }
 }
