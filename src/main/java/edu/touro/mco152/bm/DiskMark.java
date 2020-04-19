@@ -14,7 +14,7 @@ public class DiskMark {
     private double cumMin = 0;
     private double cumMax = 0;
     private double cumAvg = 0;
-    DiskMark(MarkType type) {
+    public DiskMark(MarkType type) {
         this.type = type;
     }
 
