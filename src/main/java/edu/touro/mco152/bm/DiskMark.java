@@ -23,7 +23,7 @@ public class DiskMark {
         return "Mark(" + type + "): " + getMarkNum() + " bwMbSec: " + getBwMbSecAsString() + " avg: " + getAvgAsString();
     }
 
-    String getBwMbSecAsString() {
+    public String getBwMbSecAsString() {
         return df.format(getBwMbSec());
     }
 
