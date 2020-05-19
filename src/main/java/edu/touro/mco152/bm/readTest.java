@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
+import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +25,7 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 /**
  * class for running the read benchmark
  */
-public class readTest implements readWriteCommands{
+public class readTest extends Observable implements readWriteCommands{
     public readTest() {
         for (int b=0; b<blockArr.length; b++) {
             if (b%2==0) {
@@ -47,6 +48,11 @@ public class readTest implements readWriteCommands{
 
     DiskMark rMark;
     int startFileNum = App.nextMarkNumber;
+    DiskRun run;
+
+    public DiskRun getRun() {
+        return run;
+    }
 
     /**
      * runs the read command
@@ -56,7 +62,7 @@ public class readTest implements readWriteCommands{
      */
     public boolean excute (uiworker uiworker) throws IOException {
         {
-            DiskRun run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
+            run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
             run.setNumMarks(App.numOfMarks);
             run.setNumBlocks(App.numOfBlocks);
             run.setBlockSize(App.blockSizeKb);
@@ -121,6 +127,8 @@ public class readTest implements readWriteCommands{
             em.getTransaction().commit();
 
             Gui.runPanel.addRun(run);
+            setChanged();
+            notifyObservers(run);
         }
         return true;
     }

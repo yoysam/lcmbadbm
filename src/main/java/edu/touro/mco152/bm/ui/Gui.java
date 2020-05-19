@@ -2,6 +2,7 @@ package edu.touro.mco152.bm.ui;
 
 import edu.touro.mco152.bm.App;
 import edu.touro.mco152.bm.DiskMark;
+import edu.touro.mco152.bm.persist.DiskRun;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -14,11 +15,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 import javax.swing.*;
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Store gui references for easy access
  */
-public final class Gui {
+public final class Gui implements Observer {
 
     public static ChartPanel chartPanel = null;
     public static MainFrame mainFrame = null;
@@ -136,5 +139,11 @@ public final class Gui {
         chart.getXYPlot().getRenderer().setSeriesVisibleInLegend(5, App.readTest);
         chart.getXYPlot().getRenderer().setSeriesVisibleInLegend(6, App.readTest && App.showMaxMin);
         chart.getXYPlot().getRenderer().setSeriesVisibleInLegend(7, App.readTest && App.showMaxMin);
+    }
+
+    @Override
+    public void update(Observable o, Object run) {
+        Gui.runPanel.addRun((DiskRun) run);
+        System.out.println("gui was upadated");
     }
 }

@@ -1,23 +1,27 @@
 import edu.touro.mco152.bm.*;
+import edu.touro.mco152.bm.externalsys.SlackManager;
+import edu.touro.mco152.bm.persist.AddPersistence;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import edu.touro.mco152.bm.ui.uiworker;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Properties;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 /**
  * testing the read and write commands
  */
 public class Commandtest implements uiworker {
-    Excuteer excuteer=new Excuteer();
+    testEcuter excuteer=new testEcuter();
+    public static readTest reader=null;
+    public static writetest writer=null;
+    public static boolean recive=false;
     @Override
     public void pusdopublish(DiskMark d) {
         System.out.println("to prove i got the mark the mark adv is " + d.getCumAvg());
@@ -36,7 +40,7 @@ public class Commandtest implements uiworker {
     @Override
     public void updateprog(int progress) {
         try {
-            Assertions.assertEquals(progress >= 0 && progress <= 100, true);
+  //          Assertions.assertEquals(progress >= 0 && progress <= 100, true);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -45,7 +49,7 @@ public class Commandtest implements uiworker {
 
     private final static ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final static PrintStream originalOut = System.out;
-    @Test
+
     void setup() throws Exception {
         SwitchWorker switchWorker= new SwitchWorker(this);
         switchWorker.dostuff();
@@ -85,9 +89,16 @@ public class Commandtest implements uiworker {
         }
 
         System.setOut(new PrintStream(outContent));
+        reader=new readTest();
+        writer=new writetest();
+        reader.addObserver(new testReciver());
+        writer.addObserver(new testReciver());
 
     }
-
+    @BeforeEach
+    public  void resetstream() throws IOException {
+        outContent.reset();
+    }
     /**
      * testing the write command
      * @throws IOException
@@ -98,6 +109,12 @@ public class Commandtest implements uiworker {
       Assertions.assertEquals(true,ran);
 
     }
+    @Test
+    public void excuterwritetest() throws IOException {
+        recive=false;
+        excuteer.run(this,"write");
+        Assertions.assertEquals(true,recive);
+    }
 
     /**
      * testing the read command
@@ -107,5 +124,32 @@ public class Commandtest implements uiworker {
     public void readtest() throws IOException {
      boolean ran= excuteer.run(this,"read");
         Assertions.assertEquals(true,ran);
+    }
+    @Test
+    public void excuterreadtest() throws IOException {
+        recive=false;
+        excuteer.run(this,"read");
+        Assertions.assertEquals(true,recive);
+    }
+    public static class testEcuter {
+        public boolean run (uiworker uiworker, String title) throws IOException {
+            readWriteCommands readWriteCommands = null;
+            if (title.equalsIgnoreCase("read")){
+                readWriteCommands=Commandtest.reader;
+            }
+            else if (title.equalsIgnoreCase("write")){
+                readWriteCommands=Commandtest.writer;
+            }
+            assert readWriteCommands != null;
+            return  readWriteCommands.excute(uiworker);
+
+        }
+    }
+    public static class testReciver implements Observer{
+
+        @Override
+        public void update(Observable o, Object arg) {
+            Commandtest.recive=true;
+        }
     }
 }

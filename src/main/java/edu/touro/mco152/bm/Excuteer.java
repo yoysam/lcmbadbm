@@ -18,10 +18,10 @@ public class Excuteer {
     public boolean run (uiworker uiworker, String title) throws IOException {
         readWriteCommands readWriteCommands = null;
         if (title.equalsIgnoreCase("read")){
-            readWriteCommands=new readTest();
+            readWriteCommands=App.reader;
         }
         else if (title.equalsIgnoreCase("write")){
-            readWriteCommands=new writetest();
+            readWriteCommands=App.writer;
         }
         assert readWriteCommands != null;
       return  readWriteCommands.excute(uiworker);

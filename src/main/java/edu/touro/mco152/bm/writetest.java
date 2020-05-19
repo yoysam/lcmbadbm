@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Date;
+import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,8 +23,9 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 
 /**
  * class for the write benchmark
+ * now supports overservs
  */
-public class writetest implements readWriteCommands {
+public class writetest extends Observable implements readWriteCommands  {
 
     // declare local vars formerly in DiskWorke
     public writetest() {
@@ -44,7 +46,7 @@ public class writetest implements readWriteCommands {
 
     int blockSize = blockSizeKb*KILOBYTE;
     byte [] blockArr = new byte [blockSize];
-
+    DiskRun run;
 
     DiskMark wMark;
     int startFileNum = App.nextMarkNumber;
@@ -57,7 +59,7 @@ public class writetest implements readWriteCommands {
     public  boolean excute (uiworker uiworker){
 
 
-            DiskRun run = new DiskRun(DiskRun.IOMode.WRITE, App.blockSequence);
+             run = new DiskRun(DiskRun.IOMode.WRITE, App.blockSequence);
             run.setNumMarks(App.numOfMarks);
             run.setNumBlocks(App.numOfBlocks);
             run.setBlockSize(App.blockSizeKb);
@@ -150,12 +152,9 @@ public class writetest implements readWriteCommands {
             /**
              * Persist info about the Write BM Run (e.g. into Derby Database) and add it to a GUI panel
              */
-            EntityManager em = EM.getEntityManager();
-            em.getTransaction().begin();
-            em.persist(run);
-            em.getTransaction().commit();
 
-            Gui.runPanel.addRun(run);
+            setChanged();
+            notifyObservers(run);
             return true;
         }
     }

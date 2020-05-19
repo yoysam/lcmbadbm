@@ -1,5 +1,7 @@
 package edu.touro.mco152.bm;
 
+import edu.touro.mco152.bm.externalsys.SlackManager;
+import edu.touro.mco152.bm.persist.AddPersistence;
 import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
@@ -39,8 +41,10 @@ public class App {
     public static boolean showMaxMin = true;
     public static boolean writeSyncEnable = true;
     // run configuration
-    public static boolean readTest = false;
+    public static Boolean readTest = false;
     public static boolean writeTest = true;
+    public static readTest reader=null;
+    public static writetest writer=null;
     public static DiskRun.BlockSequence blockSequence = DiskRun.BlockSequence.SEQUENTIAL;
     public static int numOfMarks = 25;      // desired number of marks
     public static int numOfBlocks = 32;     // desired number of blocks
@@ -114,6 +118,13 @@ public class App {
         loadSavedRuns();
 
         Gui.mainFrame.setVisible(true);
+        reader=new readTest();
+         writer=new writetest();
+        reader.addObserver(new Gui());
+        reader.addObserver(new AddPersistence());
+        reader.addObserver(new SlackManager());
+        writer.addObserver(new Gui());
+        writer.addObserver(new AddPersistence());
 
         // save configuration on exit...
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -122,6 +133,8 @@ public class App {
                 App.saveConfig();
             }
         });
+
+
     }
 
     public static void loadConfig() {
