@@ -24,12 +24,13 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.WRITE;
 /**
  * class for the write benchmark
  * now supports overservs
+ *  and the builder pattern
  */
 public class writetest extends Observable implements readWriteCommands  {
-    DiskRun.BlockSequence blockSequence;
-    int numberOfBlocks;
-    int numberOfMarks;
-    int sizeOfBlocks;
+   final DiskRun.BlockSequence blockSequence;
+   final int numberOfBlocks;
+   final int numberOfMarks;
+   final int sizeOfBlocks;
     public writetest(DiskRun.BlockSequence blockSequence,int numberOfBlocks, int numberOfMarks, int sizeOfBlocks) {
         this.sizeOfBlocks=sizeOfBlocks;
         this.numberOfMarks=numberOfMarks;

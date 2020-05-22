@@ -118,8 +118,10 @@ public class App {
         loadSavedRuns();
 
         Gui.mainFrame.setVisible(true);
-        reader=new readTest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
-         writer=new writetest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
+        commadBuilder commadBuilder=new commadBuilder();
+
+        reader= (edu.touro.mco152.bm.readTest) commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).type(type.read).build();
+         writer= (writetest) commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).type(type.write).build();
         reader.addObserver(new Gui());
         reader.addObserver(new AddPersistence());
         reader.addObserver(new SlackManager());

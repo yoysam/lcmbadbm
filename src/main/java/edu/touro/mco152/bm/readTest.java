@@ -24,12 +24,13 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
 
 /**
  * class for running the read benchmark
+ * now supoorts obervers and the builder pattern
  */
 public class readTest extends Observable implements readWriteCommands{
-    DiskRun.BlockSequence blockSequence;
-    int numberOfBlocks;
-    int numberOfMarks;
-    int sizeOfBlocks;
+    final DiskRun.BlockSequence blockSequence;
+   final int numberOfBlocks;
+   final int numberOfMarks;
+   final int sizeOfBlocks;
     public readTest(DiskRun.BlockSequence blockSequence,int numberOfBlocks, int numberOfMarks, int sizeOfBlocks) {
         this.sizeOfBlocks=sizeOfBlocks;
         this.numberOfMarks=numberOfMarks;

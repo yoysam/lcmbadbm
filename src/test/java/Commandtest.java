@@ -90,8 +90,10 @@ public class Commandtest implements uiworker {
         }
 
         System.setOut(new PrintStream(outContent));
-        reader=new readTest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
-        writer=new writetest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
+        commadBuilder commadBuilder=new commadBuilder();
+
+        reader= (edu.touro.mco152.bm.readTest) commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).type(type.read).build();
+        writer= (writetest) commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).type(type.write).build();
         reader.addObserver(new testReciver());
         writer.addObserver(new testReciver());
 
