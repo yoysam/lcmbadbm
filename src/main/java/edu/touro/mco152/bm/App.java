@@ -118,8 +118,8 @@ public class App {
         loadSavedRuns();
 
         Gui.mainFrame.setVisible(true);
-        reader=new readTest();
-         writer=new writetest();
+        reader=new readTest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
+         writer=new writetest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
         reader.addObserver(new Gui());
         reader.addObserver(new AddPersistence());
         reader.addObserver(new SlackManager());

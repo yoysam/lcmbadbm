@@ -26,7 +26,15 @@ import static edu.touro.mco152.bm.DiskMark.MarkType.READ;
  * class for running the read benchmark
  */
 public class readTest extends Observable implements readWriteCommands{
-    public readTest() {
+    DiskRun.BlockSequence blockSequence;
+    int numberOfBlocks;
+    int numberOfMarks;
+    int sizeOfBlocks;
+    public readTest(DiskRun.BlockSequence blockSequence,int numberOfBlocks, int numberOfMarks, int sizeOfBlocks) {
+        this.sizeOfBlocks=sizeOfBlocks;
+        this.numberOfMarks=numberOfMarks;
+        this.blockSequence=blockSequence;
+        this.numberOfBlocks=numberOfBlocks;
         for (int b=0; b<blockArr.length; b++) {
             if (b%2==0) {
                 blockArr[b]=(byte)0xFF;
@@ -63,9 +71,9 @@ public class readTest extends Observable implements readWriteCommands{
     public boolean excute (uiworker uiworker) throws IOException {
         {
             run = new DiskRun(DiskRun.IOMode.READ, App.blockSequence);
-            run.setNumMarks(App.numOfMarks);
-            run.setNumBlocks(App.numOfBlocks);
-            run.setBlockSize(App.blockSizeKb);
+            run.setNumMarks(numberOfMarks);
+            run.setNumBlocks(numberOfBlocks);
+            run.setBlockSize(sizeOfBlocks);
             run.setTxSize(App.targetTxSizeKb());
             run.setDiskInfo(Util.getDiskInfo(dataDir));
 
@@ -88,7 +96,7 @@ public class readTest extends Observable implements readWriteCommands{
                 try {
                     try (RandomAccessFile rAccFile = new RandomAccessFile(testFile, "r")) {
                         for (int b = 0; b < numOfBlocks; b++) {
-                            if (App.blockSequence == DiskRun.BlockSequence.RANDOM) {
+                            if (blockSequence == DiskRun.BlockSequence.RANDOM) {
                                 int rLoc = Util.randInt(0, numOfBlocks - 1);
                                 rAccFile.seek(rLoc * blockSize);
                             } else {

@@ -1,6 +1,7 @@
 import edu.touro.mco152.bm.*;
 import edu.touro.mco152.bm.externalsys.SlackManager;
 import edu.touro.mco152.bm.persist.AddPersistence;
+import edu.touro.mco152.bm.persist.DiskRun;
 import edu.touro.mco152.bm.ui.Gui;
 import edu.touro.mco152.bm.ui.MainFrame;
 import edu.touro.mco152.bm.ui.uiworker;
@@ -89,8 +90,8 @@ public class Commandtest implements uiworker {
         }
 
         System.setOut(new PrintStream(outContent));
-        reader=new readTest();
-        writer=new writetest();
+        reader=new readTest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
+        writer=new writetest(DiskRun.BlockSequence.SEQUENTIAL,128,25,2048);
         reader.addObserver(new testReciver());
         writer.addObserver(new testReciver());
 
