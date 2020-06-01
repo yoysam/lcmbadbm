@@ -31,11 +31,11 @@ public class readTest extends Observable implements readWriteCommands{
    final int numberOfBlocks;
    final int numberOfMarks;
    final int sizeOfBlocks;
-    public readTest(DiskRun.BlockSequence blockSequence,int numberOfBlocks, int numberOfMarks, int sizeOfBlocks) {
-        this.sizeOfBlocks=sizeOfBlocks;
-        this.numberOfMarks=numberOfMarks;
-        this.blockSequence=blockSequence;
-        this.numberOfBlocks=numberOfBlocks;
+    public readTest(Bechmarkparams bechmarkparams) {
+        this.sizeOfBlocks=bechmarkparams.sizeOfBlocks;
+        this.numberOfMarks=bechmarkparams.numberOfMarks;
+        this.blockSequence=bechmarkparams.blockSequence;
+        this.numberOfBlocks=bechmarkparams.numberOfBlocks;
         for (int b=0; b<blockArr.length; b++) {
             if (b%2==0) {
                 blockArr[b]=(byte)0xFF;

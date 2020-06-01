@@ -43,6 +43,7 @@ public class App {
     // run configuration
     public static Boolean readTest = false;
     public static boolean writeTest = true;
+    public Bechmarkparams bechmarkparams=null;
     public static readTest reader=null;
     public static writetest writer=null;
     public static DiskRun.BlockSequence blockSequence = DiskRun.BlockSequence.SEQUENTIAL;
@@ -120,8 +121,10 @@ public class App {
         Gui.mainFrame.setVisible(true);
         commadBuilder commadBuilder=new commadBuilder();
 
-        reader= (edu.touro.mco152.bm.readTest) commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).type(type.read).build();
-         writer= (writetest) commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).type(type.write).build();
+
+        Bechmarkparams bechmarkparams=commadBuilder.blockSequence(DiskRun.BlockSequence.SEQUENTIAL).numberOfBlocks(128).numberOfMark(25).sizeOfBlocks(2048).build();
+         writer= new writetest(bechmarkparams);
+         reader=new readTest(bechmarkparams);
         reader.addObserver(new Gui());
         reader.addObserver(new AddPersistence());
         reader.addObserver(new SlackManager());

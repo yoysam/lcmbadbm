@@ -6,7 +6,7 @@ import edu.touro.mco152.bm.persist.DiskRun;
  * a class to build the read and write commands
  */
 public class commadBuilder {
-    private type testtype=type.read;
+    
     private DiskRun.BlockSequence blockSequence= DiskRun.BlockSequence.SEQUENTIAL;
    private int numberOfBlocks=0;
    private int numberOfMarks=0;
@@ -17,10 +17,7 @@ public class commadBuilder {
      * @param type the type of command used
      * @return this object to  continue building
      */
-    public commadBuilder type(type type){
-        this.testtype=type;
-        return this;
-    }
+
 
     /**
      * a method to set the blockseqence
@@ -66,10 +63,8 @@ public class commadBuilder {
      * a method to build the commnad we need
      * @return the read or write command we want
      */
-    public readWriteCommands build(){
-        if (testtype==type.read)
-            return new readTest(blockSequence,numberOfBlocks,numberOfMarks,sizeOfBlocks);
-        else
-            return new writetest(blockSequence,numberOfBlocks,numberOfMarks,sizeOfBlocks);
+    public Bechmarkparams build(){
+
+            return new Bechmarkparams(blockSequence,numberOfBlocks,numberOfMarks,sizeOfBlocks);
     }
 }
